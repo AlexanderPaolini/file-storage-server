@@ -1,0 +1,41 @@
+{
+  "port": 1234,
+  "domain": "example.com",
+  "secure": false,
+  "users": [
+    {
+      "name": "user1",
+      "token": "token1"
+    },
+    {
+      "name": "user2",
+      "token": "token2"
+    },
+    {
+      "name": "user3",
+      "token": "token3"
+    }
+  ],
+  "debug": false,
+  "mongo": {
+    "connectURI": "mongodb://localhost/file-storage-server",
+    "connectOptions": {
+      "useUnifiedTopology": true,
+      "useNewUrlParser": true
+    }
+  },
+  "storageNodes": [
+    {
+      "name": "node-1",
+      "id": "1",
+      "url": "http://localhost:3000",
+      "token": "token"
+    },
+    {
+      "name": "node-2",
+      "id": "2",
+      "url": "http://localhost:3001",
+      "token": "token2"
+    }
+  ]
+}
