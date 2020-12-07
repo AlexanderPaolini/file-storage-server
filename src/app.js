@@ -34,4 +34,5 @@ app.use(fileRoute);
 // Start Server
 app.listen(port, () => { logger.log("File Storage Server Started"); });
 
-// process.on('uncaughtException', (err) => { logger.error(err); });
+// Gotta catch em all!
+process.on('uncaughtException', (err) => { logger.error(err); });
