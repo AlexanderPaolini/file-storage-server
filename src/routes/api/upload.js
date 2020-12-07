@@ -107,12 +107,12 @@ router.post('/', async (req, res) => {
     date: new Date().toLocaleDateString()
   };
   // Save the object in the DB
-  logger.debug('Created file', fileObj.name, 'in the DB');
+  logger.debug('Created file', `${fileObj.name}`, 'in the DB');
   try {
     await fileModel.create(fileObj);
   } catch (err) {
     if (err) {
-      logger.error('Saving', fileObj.name, 'to DB failed');
+      logger.error('Saving', `${fileObj.name}`, 'to DB failed');
       logger.error(err);
       res.status(500).json({
         success: false,
@@ -126,7 +126,7 @@ router.post('/', async (req, res) => {
   // Attempt to delete the file
   files.deleteFile(req.files.file.tempFilePath);
   // Return with the URL of the file
-  logger.log('Saved file', fileObj.name, 'from', req.parsedIP);
+  logger.log('Saved file', `${fileObj.name}`, 'from', req.parsedIP);
   let mainURL = (config.secure ? 'https://' : 'http://') + config.domain;
   res.status(200).json({
     success: true,

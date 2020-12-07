@@ -23,7 +23,7 @@ router.get('/delete/:key', async (req, res) => {
   } catch (err) {
     // If error occurs when retreiving from DB, return 500 (Internal Server Error)
     if (err) {
-      logger.error('Getting', req.params.name, 'from DB failed');
+      logger.error('Getting', `"${req.params.key}"`, 'from DB failed');
       logger.error(err);
       res.status(500).send('Internal Server Error');
       return;
@@ -31,7 +31,7 @@ router.get('/delete/:key', async (req, res) => {
   }
   // Check to make sure it exists, if not return 404 (Not Found)
   if (!fileData) {
-    logger.debug('User', `${req.parsedIP}`, 'requested the deletion of file', req.params.name, 'which does not exist');
+    logger.debug('User', `${req.parsedIP}`, 'requested the deletion of a file which does not exist');
     res.status(404).send('File not found');
     return;
   }
@@ -39,7 +39,7 @@ router.get('/delete/:key', async (req, res) => {
   let node = config.storageNodes.find(e => e.id == fileData.nodeID);
   // If there is no storage node, return 404 (Not Found)
   if (!node) {
-    logger.warn('Node not found for file', req.params.name);
+    logger.warn('Node not found for file', `"${req.params.key}"`);
     res.status(404).send('File not found');
     return;
   }
