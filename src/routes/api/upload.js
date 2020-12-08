@@ -72,18 +72,16 @@ router.post('/', async (req, res) => {
     response = await fetchResponse.json();
   } catch (err) {
     // If there is an error in the request, return 500 (Internal Server Error) and delete the file
-    if (err) {
-      logger.error('Error occured when posting to node', node.id);
-      logger.error(err);
-      res.status(500).json({
-        success: false,
-        message: "An unknown error has occured.",
-        fix: "Try again later."
-      });
-      files.deleteFile(req.files.file.tempFilePath);
-      return;
-    }
-  }
+    logger.error('Error occured when posting to node', node.id);
+    logger.error(err);
+    res.status(500).json({
+      success: false,
+      message: "An unknown error has occured.",
+      fix: "Try again later."
+    });
+    files.deleteFile(req.files.file.tempFilePath);
+    return;
+  };
   // If success is false, return 500 (Internal Server Error) and delete the file
   if (!response.success) {
     logger.warn('POST request to node', node.id, 'failed');
@@ -107,21 +105,19 @@ router.post('/', async (req, res) => {
     date: new Date().toLocaleDateString()
   };
   // Save the object in the DB
-  logger.debug('Created file', `${fileObj.name}`, 'in the DB');
   try {
     await fileModel.create(fileObj);
+    logger.debug('Saved file', `${fileObj.name}`, 'in the DB');
   } catch (err) {
-    if (err) {
-      logger.error('Saving', `${fileObj.name}`, 'to DB failed');
-      logger.error(err);
-      res.status(500).json({
-        success: false,
-        message: "An unknown error has occured.",
-        fix: "Try again later."
-      });
-      files.deleteFile(req.files.file.tempFilePath);
-      return;
-    }
+    logger.error('Saving', `${fileObj.name}`, 'to DB failed');
+    logger.error(err);
+    res.status(500).json({
+      success: false,
+      message: "An unknown error has occured.",
+      fix: "Try again later."
+    });
+    files.deleteFile(req.files.file.tempFilePath);
+    return;
   }
   // Attempt to delete the file
   files.deleteFile(req.files.file.tempFilePath);

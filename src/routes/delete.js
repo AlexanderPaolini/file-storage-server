@@ -20,14 +20,13 @@ router.get('/delete/:key', async (req, res) => {
   let fileData;
   try {
     fileData = await fileModel.findOne({ deletionKey: req.params.key });
+    logger.debug('Retrieved', `"${req.params.key}"`, 'from the DB');
   } catch (err) {
     // If error occurs when retreiving from DB, return 500 (Internal Server Error)
-    if (err) {
-      logger.error('Getting', `"${req.params.key}"`, 'from DB failed');
-      logger.error(err);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
+    logger.error('Retrieving', `"${req.params.key}"`, 'from DB failed');
+    logger.error(err);
+    res.status(500).send('Internal Server Error');
+    return;
   }
   // Check to make sure it exists, if not return 404 (Not Found)
   if (!fileData) {
@@ -58,16 +57,14 @@ router.get('/delete/:key', async (req, res) => {
     response = await fetchResponse.json();
   } catch (err) {
     // If an error occurs while requesting, log it and return 500 (Internal Server Error)
-    if (err) {
-      logger.error('Error occured when requesting from node', node.id);
-      logger.error(err);
-      res.status(500).json({
-        success: false,
-        message: "An unknown error has occured.",
-        fix: "Try again later."
-      });
-      return;
-    }
+    logger.error('Error occured when requesting from node', node.id);
+    logger.error(err);
+    res.status(500).json({
+      success: false,
+      message: "An unknown error has occured.",
+      fix: "Try again later."
+    });
+    return;
   }
   // If the response success returns false, log response and return 500 (Internal Server Error)
   if (!response.success) {
@@ -83,17 +80,16 @@ router.get('/delete/:key', async (req, res) => {
   try {
     // Delete the file from the DB
     await fileModel.deleteOne({ deletionKey: req.params.key });
+    logger.debug('Deleted', fileData.id, 'from the DB');
   } catch (err) {
-    if (err) {
-      logger.error('Error when deleting', fileData.id, 'from the DB');
-      logger.error(err);
-      res.status(500).json({
-        success: false,
-        message: "An unknown error has occured when deleting from the database.",
-        fix: "none"
-      });
-      return;
-    }
+    logger.error('Error when deleting', fileData.id, 'from the DB');
+    logger.error(err);
+    res.status(500).json({
+      success: false,
+      message: "An unknown error has occured when deleting from the database.",
+      fix: "none"
+    });
+    return;
   }
   res.status(200).send('File successfully deleted.');
   return;

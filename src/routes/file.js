@@ -20,15 +20,14 @@ router.get('/:name', async (req, res) => {
   let fileData;
   try {
     fileData = await fileModel.findOne({ name: req.params.name });
+    logger.debug('Retrieved', req.params.name, 'from the DB');
   } catch (err) {
     // If error occurs when retreiving from DB, return 500 (Internal Server Error)
-    if (err) {
-      logger.error('Getting', req.params.name, 'from DB failed');
-      logger.error(err);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
-  }
+    logger.error('Retrieving', req.params.name, 'from the DB failed');
+    logger.error(err);
+    res.status(500).send('Internal Server Error');
+    return;
+  };
   // Check to make sure it exists, if not return 404 (Not Found)
   if (!fileData) {
     logger.debug('User', `${req.parsedIP}`, 'requested file', req.params.name, 'which does not exist');
@@ -58,17 +57,15 @@ router.get('/:name', async (req, res) => {
     buffer = await fetchResponse.buffer();
   } catch (err) {
     // If an error occurs while requesting, log it and return 500 (Internal Server Error)
-    if (err) {
-      logger.error('Error occured when requesting from node', node.id);
-      logger.error(err);
-      res.status(500).json({
-        success: false,
-        message: "An unknown error has occured.",
-        fix: "Try again later."
-      });
-      files.deleteFile(req.files.file.tempFilePath);
-      return;
-    }
+    logger.error('Error occured when requesting from node', node.id);
+    logger.error(err);
+    res.status(500).json({
+      success: false,
+      message: "An unknown error has occured.",
+      fix: "Try again later."
+    });
+    files.deleteFile(req.files.file.tempFilePath);
+    return;
   }
   // Send the buffer
   res.contentType(fileData.mimetype);
