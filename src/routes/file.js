@@ -4,6 +4,9 @@ const config = require('../../config.json');
 // Define util functions
 const logger = require('../util/logger.js');
 
+// Return Messages
+const messages = require('../util/messages.json');
+
 // Database Models
 const fileModel = require('../models/file.js');
 
@@ -59,11 +62,7 @@ router.get('/:name', async (req, res) => {
     // If an error occurs while requesting, log it and return 500 (Internal Server Error)
     logger.error('Error occured when requesting from node', node.id);
     logger.error(err);
-    res.status(500).json({
-      success: false,
-      message: "An unknown error has occured.",
-      fix: "Try again later."
-    });
+    res.status(500).send(messages.UNKNOWN_ERROR);
     files.deleteFile(req.files.file.tempFilePath);
     return;
   }

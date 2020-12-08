@@ -4,6 +4,9 @@ const config = require('../../config.json');
 // Define util functions
 const logger = require('../util/logger.js');
 
+// Return Messages
+const messages = require('../util/messages.json');
+
 // Database Models
 const fileModel = require('../models/file.js');
 
@@ -59,22 +62,14 @@ router.get('/delete/:key', async (req, res) => {
     // If an error occurs while requesting, log it and return 500 (Internal Server Error)
     logger.error('Error occured when requesting from node', node.id);
     logger.error(err);
-    res.status(500).json({
-      success: false,
-      message: "An unknown error has occured.",
-      fix: "Try again later."
-    });
+    res.status(500).send(messages.UNKNOWN_ERROR);
     return;
   }
   // If the response success returns false, log response and return 500 (Internal Server Error)
   if (!response.success) {
     logger.warn('Error deleting file from node', node.id);
     logger.warn(response.message);
-    res.status(500).json({
-      success: false,
-      message: "An unknown error has occured.",
-      fix: "Try again later."
-    });
+    res.status(500).send(messages.UNKNOWN_ERROR);
     return;
   }
   try {
@@ -84,11 +79,7 @@ router.get('/delete/:key', async (req, res) => {
   } catch (err) {
     logger.error('Error when deleting', fileData.id, 'from the DB');
     logger.error(err);
-    res.status(500).json({
-      success: false,
-      message: "An unknown error has occured when deleting from the database.",
-      fix: "none"
-    });
+    res.status(500).send(messages.UNKNOWN_ERROR);
     return;
   }
   res.status(200).send('File successfully deleted.');

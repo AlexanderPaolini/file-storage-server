@@ -1,0 +1,6 @@
+{
+  "UNKNOWN_ERROR": "An unknown error has occured.",
+  "TRY_AGAIN": "Try again later.",
+  "NO_FILE": "No file included.",
+  "INCLUDE_FILE": "Include a file with the name \"file\""
+}

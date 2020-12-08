@@ -6,6 +6,9 @@ const logger = require('../../util/logger.js');
 const random = require('../../util/random.js');
 const files = require('../../util/files');
 
+// Return Messages
+const messages = require('../../util/messages.json');
+
 // Database Models
 const fileModel = require('../../models/file.js');
 
@@ -34,8 +37,8 @@ router.post('/', async (req, res) => {
     logger.debug('User from', req.parsedIP, 'posted /api/upload without a file');
     req.status(400).json({
       success: false,
-      message: "No file included.",
-      fix: "Include a file with the name \"file\""
+      message: messages.NO_FILE,
+      fix: messages.INCLUDE_FILE
     });
     return;
   }
@@ -50,8 +53,8 @@ router.post('/', async (req, res) => {
     logger.warn('No node found for upload.');
     req.status(500).json({
       success: false,
-      message: "An unknown error has occured.",
-      fix: "Try again later."
+      message: messages.UNKNOWN_ERROR,
+      fix: TRY_AGAIN
     });
     files.deleteFile(req.files.file.tempFilePath);
     return;
@@ -76,8 +79,8 @@ router.post('/', async (req, res) => {
     logger.error(err);
     res.status(500).json({
       success: false,
-      message: "An unknown error has occured.",
-      fix: "Try again later."
+      message: messages.UNKNOWN_ERROR,
+      fix: messages.TRY_AGAIN
     });
     files.deleteFile(req.files.file.tempFilePath);
     return;
@@ -88,8 +91,8 @@ router.post('/', async (req, res) => {
     logger.warn(response.message);
     res.status(500).json({
       success: false,
-      message: "An unknown error has occured.",
-      fix: "Try again later."
+      message: messages.UNKNOWN_ERROR,
+      fix: messages.TRY_AGAIN
     });
     files.deleteFile(req.files.file.tempFilePath);
     return;
@@ -113,8 +116,8 @@ router.post('/', async (req, res) => {
     logger.error(err);
     res.status(500).json({
       success: false,
-      message: "An unknown error has occured.",
-      fix: "Try again later."
+      message: messages.UNKNOWN_ERROR,
+      fix: messages.TRY_AGAIN
     });
     files.deleteFile(req.files.file.tempFilePath);
     return;
