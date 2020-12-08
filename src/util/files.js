@@ -9,6 +9,10 @@ module.exports.deleteFile = (resolvedPath) => {
   // Delete the file
   fs.unlink(resolvedPath, (err) => {
     // If there is an error, log the error
-    if (err) logger.error(err);
+    if (err) {
+      logger.error('An error occrured when deleting file:', resolvedPath);
+      logger.error(err);
+      return false;
+    } else return true;
   });
 };
